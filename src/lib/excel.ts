@@ -18,6 +18,24 @@ export async function readWorkbookFile(file: File): Promise<SheetData[]> {
   const sheets: SheetData[] = [];
   for (const name of wb.SheetNames) {
     const ws = wb.Sheets[name];
+    if (!ws) continue;
+
+    // Check if cell has hyperlinks (e.g., text displayed as "صورة" but has link in l.Target)
+    const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:A1');
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+        const cell = ws[cellAddress];
+        if (cell && cell.l && cell.l.Target) {
+          // If the cell text is not a full URL or is just label text, set its value to the link Target
+          const strVal = String(cell.v ?? '').trim();
+          if (!strVal.startsWith('http://') && !strVal.startsWith('https://')) {
+            cell.v = cell.l.Target;
+          }
+        }
+      }
+    }
+
     const raw = XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1, defval: '', blankrows: false });
     const rows = raw.map((r) => r.map(cellToString));
     if (rows.length > 0) sheets.push({ name, rows });

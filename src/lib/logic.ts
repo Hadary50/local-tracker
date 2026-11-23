@@ -514,10 +514,10 @@ export function applyImport(
       productId = product.id;
       created += 1;
     } else if (l.image) {
-      // update image if provided in import
+      // update image whenever a new image is provided in the file
       d = {
         ...d,
-        products: d.products.map((prod) => (prod.id === productId && !prod.image ? { ...prod, image: l.image } : prod)),
+        products: d.products.map((prod) => (prod.id === productId ? { ...prod, image: l.image } : prod)),
       };
     }
     const { delta } = lineResult(l, p.mode);

@@ -50,19 +50,25 @@ export function Empty({ text, children }: { text: string; children?: ReactNode }
   );
 }
 
-/** Converts Google Drive, Dropbox, and common cloud image links to direct image URLs */
+/** Converts Google Drive, Dropbox, OneDrive, and common cloud image links to direct image URLs */
 export function formatImageUrl(url?: string): string {
   if (!url) return '';
-  const trimmed = url.trim();
-  // Google Drive preview/file link -> direct download/thumbnail link
-  const gdMatch = trimmed.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
+  let trimmed = url.trim();
+
+  // If URL was wrapped in excel HYPERLINK function or quotes
+  trimmed = trimmed.replace(/^=HYPERLINK\("?([^",]+)"?.*$/i, '$1').replace(/^["']|["']$/g, '');
+
+  // Google Drive preview/file link -> direct thumbnail link
+  const gdMatch = trimmed.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/);
   if (gdMatch) {
-    return `https://lh3.googleusercontent.com/d/${gdMatch[1]}`;
+    return `https://drive.google.com/thumbnail?id=${gdMatch[1]}&sz=w400`;
   }
+
   // Dropbox link -> raw=1
   if (trimmed.includes('dropbox.com')) {
     return trimmed.replace('dl=0', 'raw=1');
   }
+
   return trimmed;
 }
 
