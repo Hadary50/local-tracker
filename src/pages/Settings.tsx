@@ -108,7 +108,7 @@ export default function Settings() {
             <div className="card-header fw-bold">النسخ الاحتياطي</div>
             <div className="card-body">
               <p className="text-secondary small">
-                البيانات محفوظة داخل هذا المتصفح فقط. حمّل نسخة احتياطية بشكل دوري، ويمكنك استرجاعها أو نقلها إلى جهاز آخر.
+                البيانات متزامنة سحابياً مع قاعدة البيانات المركزية. يمكنك أيضاً تحميل نسخة احتياطية محلية بصيغة JSON كإجراء أمان إضافي أو لاسترجاعها في أي وقت.
               </p>
               <div className="d-flex flex-wrap gap-2">
                 <button className="btn btn-outline-dark" onClick={backup}>

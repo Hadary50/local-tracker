@@ -21,7 +21,7 @@ const NAV = [
 
 export default function App() {
   const route = useRoute();
-  const { data, saveFailed } = useStore();
+  const { data, saveFailed, loading } = useStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const page = route.path[0] ?? 'dashboard';
 
@@ -86,10 +86,19 @@ export default function App() {
         <main className="content">
           {saveFailed && (
             <div className="alert alert-danger">
-              تعذّر حفظ البيانات في المتصفح (قد تكون المساحة ممتلئة أو التخزين معطّل). حمّل نسخة احتياطية من الإعدادات الآن.
+              تعذّر الاتصال بقاعدة البيانات. تأكد من اتصال الإنترنت أو تحقق من إعدادات Supabase.
             </div>
           )}
-          {content}
+          {loading ? (
+            <div className="d-flex flex-column align-items-center justify-content-center py-5 text-secondary">
+              <div className="spinner-border mb-3" role="status">
+                <span className="visually-hidden">جاري التحميل...</span>
+              </div>
+              <div>جاري تحميل البيانات من السيرفر...</div>
+            </div>
+          ) : (
+            content
+          )}
         </main>
       </div>
     </div>
