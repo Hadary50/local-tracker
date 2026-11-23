@@ -2,7 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react';
 import { useStore } from '../store';
 import { useToast } from '../components/Toast';
 import Modal from '../components/Modal';
-import { Empty, PageHeader, QtyBadge, variantLabel } from '../components/ui';
+import { Empty, PageHeader, ProductImage, QtyBadge, variantLabel } from '../components/ui';
 import { MovementModal } from '../components/MovementForm';
 import ImportPage from './ImportPage';
 import { addProduct, deleteProduct, matchesQuery, sortProducts, todayStr, updateProduct } from '../lib/logic';
@@ -136,24 +136,7 @@ function InventoryList({ route }: { route: Route }) {
                 {rows.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      {p.image ? (
-                        <a href={p.image} target="_blank" rel="noreferrer" title="عرض الصورة بالحجم الكامل">
-                          <img
-                            src={p.image}
-                            alt=""
-                            className="rounded object-fit-cover border shadow-sm"
-                            style={{ width: 38, height: 38 }}
-                            onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
-                          />
-                        </a>
-                      ) : (
-                        <div
-                          className="bg-light rounded border d-flex align-items-center justify-content-center text-muted"
-                          style={{ width: 38, height: 38 }}
-                        >
-                          <i className="bi bi-image small" />
-                        </div>
-                      )}
+                      <ProductImage src={p.image} size={38} />
                     </td>
                     <td className="fw-semibold">{p.name}</td>
                     <td>{brandName(p.brandId)}</td>

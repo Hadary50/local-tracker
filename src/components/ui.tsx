@@ -50,6 +50,65 @@ export function Empty({ text, children }: { text: string; children?: ReactNode }
   );
 }
 
+/** Converts Google Drive, Dropbox, and common cloud image links to direct image URLs */
+export function formatImageUrl(url?: string): string {
+  if (!url) return '';
+  const trimmed = url.trim();
+  // Google Drive preview/file link -> direct download/thumbnail link
+  const gdMatch = trimmed.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
+  if (gdMatch) {
+    return `https://lh3.googleusercontent.com/d/${gdMatch[1]}`;
+  }
+  // Dropbox link -> raw=1
+  if (trimmed.includes('dropbox.com')) {
+    return trimmed.replace('dl=0', 'raw=1');
+  }
+  return trimmed;
+}
+
+export function ProductImage({
+  src,
+  size = 40,
+  className = '',
+}: {
+  src?: string;
+  size?: number;
+  className?: string;
+}) {
+  const formatted = formatImageUrl(src);
+  if (!formatted) {
+    return (
+      <div
+        className={`bg-light rounded border d-flex align-items-center justify-content-center text-muted ${className}`}
+        style={{ width: size, height: size, minWidth: size, minHeight: size }}
+      >
+        <i className="bi bi-image" style={{ fontSize: size * 0.4 }} />
+      </div>
+    );
+  }
+  return (
+    <a href={formatted} target="_blank" rel="noreferrer" title="تكبير الصورة">
+      <img
+        src={formatted}
+        alt=""
+        referrerPolicy="no-referrer"
+        crossOrigin="anonymous"
+        className={`rounded object-fit-cover border shadow-sm ${className}`}
+        style={{ width: size, height: size, minWidth: size, minHeight: size }}
+        onError={(e) => {
+          const target = e.currentTarget;
+          target.onerror = null;
+          target.style.display = 'none';
+          const parent = target.parentElement;
+          if (parent) {
+            parent.innerHTML = `<div class="bg-light rounded border d-flex align-items-center justify-content-center text-muted" style="width:${size}px;height:${size}px;"><i class="bi bi-image-alt" style="font-size:${size * 0.4}px;"></i></div>`;
+          }
+        }}
+      />
+    </a>
+  );
+}
+
 const TYPE_TONE: Record<MovementType, string> = {
   received: 'success',
   sold: 'primary',

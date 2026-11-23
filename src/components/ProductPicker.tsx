@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useStore } from '../store';
 import { matchesQuery, sortProducts } from '../lib/logic';
+import { ProductImage } from './ui';
 import type { Product } from '../types';
 
 interface Props {
@@ -65,7 +66,10 @@ export default function ProductPicker({ value, onChange, disabled, autoFocus, pl
                 (document.activeElement as HTMLElement | null)?.blur();
               }}
             >
-              <span>{label(p)}</span>
+              <div className="d-flex align-items-center gap-2">
+                <ProductImage src={p.image} size={28} />
+                <span>{label(p)}</span>
+              </div>
               <span className="small opacity-75">الرصيد: {p.qty}</span>
             </button>
           ))}

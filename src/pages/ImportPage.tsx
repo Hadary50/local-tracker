@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { useStore } from '../store';
 import { useToast } from '../components/Toast';
-import { PageHeader } from '../components/ui';
+import { PageHeader, ProductImage } from '../components/ui';
 import { downloadTemplate, readWorkbookFile, type SheetData } from '../lib/excel';
 import {
   addBrand,
@@ -398,17 +398,7 @@ export default function ImportPage({ route }: { route: Route }) {
                               )}
                             </td>
                             <td>
-                              {l.image ? (
-                                <img
-                                  src={l.image}
-                                  alt=""
-                                  className="rounded object-fit-cover border"
-                                  style={{ width: 32, height: 32 }}
-                                  onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
-                                />
-                              ) : (
-                                <span className="text-muted">—</span>
-                              )}
+                              <ProductImage src={l.image} size={32} />
                             </td>
                             <td>{l.name}</td>
                             <td>{l.size || '—'}</td>

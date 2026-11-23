@@ -2,7 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react';
 import { useStore } from '../store';
 import { useToast } from '../components/Toast';
 import Modal from '../components/Modal';
-import { Empty, PageHeader, QtyBadge, StatCard, variantLabel } from '../components/ui';
+import { Empty, PageHeader, ProductImage, QtyBadge, StatCard, variantLabel } from '../components/ui';
 import { MovementModal } from '../components/MovementForm';
 import { addBrand, brandStats, deleteBrand, matchesQuery, renameBrand, sortProducts } from '../lib/logic';
 import type { Route } from '../hooks/useRoute';
@@ -224,22 +224,7 @@ function BrandDetail({ brandId }: { brandId: string }) {
                 {products.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      {p.image ? (
-                        <img
-                          src={p.image}
-                          alt=""
-                          className="rounded object-fit-cover border shadow-sm"
-                          style={{ width: 34, height: 34 }}
-                          onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
-                        />
-                      ) : (
-                        <div
-                          className="bg-light rounded border d-flex align-items-center justify-content-center text-muted"
-                          style={{ width: 34, height: 34 }}
-                        >
-                          <i className="bi bi-image small" />
-                        </div>
-                      )}
+                      <ProductImage src={p.image} size={34} />
                     </td>
                     <td className="fw-semibold">{p.name}</td>
                     <td>{variantLabel(p.size, p.color) || '—'}</td>
